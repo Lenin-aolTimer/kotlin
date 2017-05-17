@@ -125,3 +125,10 @@ inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
 inline fun <T, C : Collection<T>, O> C.ifNotEmpty(body: C.() -> O?): O? = if (isNotEmpty()) this.body() else null
 
 inline fun <T, O> Array<out T>.ifNotEmpty(body: Array<out T>.() -> O?): O? = if (isNotEmpty()) this.body() else null
+
+public fun <T> Iterable<Iterable<T>>.flattenTo(c: MutableList<T>): List<T> {
+    for (element in this) {
+        c.addAll(element)
+    }
+    return c
+}

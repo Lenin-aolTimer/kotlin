@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.load.java.structure.impl.classFiles
 
+import gnu.trove.THashMap
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.load.java.JavaVisibilities
@@ -55,7 +56,7 @@ internal interface BinaryJavaModifierListOwner : JavaModifierListOwner, BinaryJa
 }
 
 internal fun JavaAnnotationOwner.buildLazyValueForMap() = lazy {
-    annotations.filter { it.classId != null }.associateBy({ it.classId!!.asSingleFqName() }, { it })
+    annotations.filter { it.classId != null }.associateByTo(THashMap(), { it.classId!!.asSingleFqName() }, { it })
 }
 
 internal fun Int.isSet(flag: Int) = this and flag != 0

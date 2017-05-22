@@ -52,7 +52,7 @@ import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import java.util.*
 
 class LazyJavaClassDescriptor(
-        val outerContext: LazyJavaResolverContext,
+        outerContext: LazyJavaResolverContext,
         containingDeclaration: DeclarationDescriptor,
         private val jClass: JavaClass,
         private val additionalSupertypeClassDescriptor: ClassDescriptor? = null

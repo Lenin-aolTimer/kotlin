@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.Visibilities;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
 import org.jetbrains.kotlin.name.FqName;
@@ -97,6 +98,11 @@ public class JavaValueParameterImpl extends JavaElementImpl<PsiParameter>
     @NotNull
     public JavaType getType() {
         return JavaTypeImpl.create(getPsi().getType());
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return JavaAnnotationOwner.DefaultImpls.isEmpty(this);
     }
 
     @Override

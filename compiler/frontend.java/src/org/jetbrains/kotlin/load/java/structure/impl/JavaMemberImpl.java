@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaMember;
 import org.jetbrains.kotlin.name.FqName;
@@ -96,5 +97,10 @@ public abstract class JavaMemberImpl<Psi extends PsiMember> extends JavaElementI
     public boolean isDeprecatedInJavaDoc() {
         PsiMember psi = getPsi();
         return psi instanceof PsiDocCommentOwner && ((PsiDocCommentOwner) psi).isDeprecated();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return JavaAnnotationOwner.DefaultImpls.isEmpty(this);
     }
 }

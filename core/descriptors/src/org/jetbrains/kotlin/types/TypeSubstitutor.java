@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns;
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.annotations.Annotations;
-import org.jetbrains.kotlin.descriptors.annotations.CompositeAnnotations;
 import org.jetbrains.kotlin.descriptors.annotations.FilteredAnnotations;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.resolve.calls.inference.CapturedTypeConstructorKt;
@@ -32,6 +31,8 @@ import org.jetbrains.kotlin.types.typesApproximation.CapturedTypeApproximationKt
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.jetbrains.kotlin.descriptors.annotations.AnnotationsKt.composeAnnotations;
 
 public class TypeSubstitutor {
 
@@ -193,7 +194,7 @@ public class TypeSubstitutor {
                 Annotations typeAnnotations = filterOutUnsafeVariance(substitution.filterAnnotations(type.getAnnotations()));
                 substitutedType = TypeUtilsKt.replaceAnnotations(
                         substitutedType,
-                        new CompositeAnnotations(substitutedType.getAnnotations(), typeAnnotations)
+                        composeAnnotations(substitutedType.getAnnotations(), typeAnnotations)
                 );
             }
 

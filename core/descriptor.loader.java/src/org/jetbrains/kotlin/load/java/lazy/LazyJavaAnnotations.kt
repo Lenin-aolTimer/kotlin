@@ -51,4 +51,4 @@ class LazyJavaAnnotations(
 }
 
 fun LazyJavaResolverContext.resolveAnnotations(annotationsOwner: JavaAnnotationOwner): Annotations
-        = LazyJavaAnnotations(this, annotationsOwner)
+        = if (annotationsOwner.isEmpty) Annotations.EMPTY else LazyJavaAnnotations (this, annotationsOwner)

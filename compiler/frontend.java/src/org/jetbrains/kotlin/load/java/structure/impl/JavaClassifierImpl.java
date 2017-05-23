@@ -21,6 +21,7 @@ import com.intellij.psi.PsiTypeParameter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
 import org.jetbrains.kotlin.name.FqName;
 
@@ -56,5 +57,10 @@ public abstract class JavaClassifierImpl<Psi extends PsiClass> extends JavaEleme
     @Override
     public boolean isDeprecatedInJavaDoc() {
         return getPsi().isDeprecated();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return JavaAnnotationOwner.DefaultImpls.isEmpty(this);
     }
 }

@@ -31,6 +31,8 @@ interface JavaAnnotationOwner : JavaElement {
     val annotations: Collection<JavaAnnotation>
     fun findAnnotation(fqName: FqName): JavaAnnotation?
 
+    val isEmpty get() = annotations.isEmpty() && !isDeprecatedInJavaDoc
+
     val isDeprecatedInJavaDoc: Boolean
 }
 

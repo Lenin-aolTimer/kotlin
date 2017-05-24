@@ -96,10 +96,11 @@ class JavaTypeResolver(
             return computeSimpleJavaClassifierType(javaType, attr) ?: errorType()
         }
 
-        fun computeBound(lower: Boolean) = computeSimpleJavaClassifierType(javaType, attr.computeAttributes(allowFlexible, isRaw, forLower = lower))
+        fun computeBound(lower: Boolean, lowerResult: SimpleType? = null) =
+                computeSimpleJavaClassifierType(javaType, attr.computeAttributes(allowFlexible, isRaw, forLower = lower), lowerResult)
 
         val lower = computeBound(lower = true) ?: return errorType()
-        val upper = computeBound(lower = false) ?: return errorType()
+        val upper = computeBound(lower = false, lowerResult = lower) ?: return errorType()
 
         return if (javaType.isRaw) {
             RawTypeImpl(lower, upper)
@@ -109,11 +110,20 @@ class JavaTypeResolver(
         }
     }
 
-    private fun computeSimpleJavaClassifierType(javaType: JavaClassifierType, attr: JavaTypeAttributes): SimpleType? {
-        val annotations = composeAnnotations(c.resolveAnnotations(javaType), attr.typeAnnotations)
+    private fun computeSimpleJavaClassifierType(
+            javaType: JavaClassifierType, attr: JavaTypeAttributes,
+            lowerResult: SimpleType? = null
+    ): SimpleType? {
+        val annotations =
+                lowerResult?.annotations ?: composeAnnotations(c.resolveAnnotations(javaType), attr.typeAnnotations)
         val constructor = computeTypeConstructor(javaType, attr) ?: return null
-        val arguments = computeArguments(javaType, attr, constructor)
         val isNullable = isNullable(javaType, attr)
+
+        if (lowerResult?.constructor === constructor && !javaType.isRaw && isNullable) {
+            return lowerResult.makeNullableAsSpecified(true)
+        }
+
+        val arguments = computeArguments(javaType, attr, constructor)
 
         return KotlinTypeFactory.simpleType(annotations, constructor, arguments, isNullable)
     }
@@ -191,7 +201,7 @@ class JavaTypeResolver(
         return mutableLastParameterVariance != OUT_VARIANCE
     }
 
-    fun computeArguments(javaType: JavaClassifierType, attr: JavaTypeAttributes, constructor: TypeConstructor): List<TypeProjection> {
+    private fun computeArguments(javaType: JavaClassifierType, attr: JavaTypeAttributes, constructor: TypeConstructor): List<TypeProjection> {
         val eraseTypeParameters = run {
             if (attr.rawBound != RawBound.NOT_RAW) return@run true
 
@@ -411,4 +421,3 @@ internal fun TypeParameterDescriptor.getErasedUpperBound(
 
     return defaultValue()
 }
-
